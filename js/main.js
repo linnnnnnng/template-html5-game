@@ -37,4 +37,33 @@ function handleComplete() {
 function initMain(){
 	//start page script here
 	$('.content').css('visibility', 'visible');
+	initGameCanvas();
+	buildGameCanvas();
+}
+
+//canvas 
+var stage
+function initGameCanvas(){
+	stage = new createjs.Stage("gameCanvas");
+}
+
+function buildGameCanvas(){
+	var box = new createjs.Shape();
+	box.graphics.beginFill("#000").drawRect(0, 0, 100, 100);
+	stage.addChild(box);
+		
+	createjs.Ticker.setFPS(60);
+	createjs.Ticker.addEventListener("tick", tick);	
+}
+
+ function removeGameCanvas(){
+	 stage.autoClear = true; // This must be true to clear the stage.
+	 stage.removeAllChildren();
+	 stage.update();
+	 createjs.Ticker.removeEventListener("tick", tick);
+	 createjs.Ticker.removeEventListener("tick", stage);
+ }
+
+function tick(event) {
+	stage.update(event);
 }
