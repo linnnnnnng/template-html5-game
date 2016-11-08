@@ -1,116 +1,86 @@
-/*!
- * 
- * All your scripts insert here
- * 
- */
- var stageWidth,stageHeight=0;
- var loadCount=checkCount=0;
- var mainScript_arr=[
-				'js/vendor/jquery.touchSwipe.min.js',
-				'http://code.createjs.com/preloadjs-0.4.1.min.js',
-        		'http://code.createjs.com/easeljs-0.7.0.min.js',
-        		'http://code.createjs.com/soundjs-0.5.2.min.js',
-        		'js/vendor/greensock/easing/EasePack.min.js',
-        		'js/vendor/greensock/TweenMax.min.js',
-				'js/main.js']
- var loadpage='';
- var loaded=false;
- var pagInit=false;
- 
- $(function() {
- 	if(pagInit==false){
-		pagInit=true;
-		
-		resizeMainBrowser();
-		$(window).resize(function(){
-			resizeMainBrowser();
-		});
-		
-		initLoader();
-		//prevent mobile touch move
-		/*document.body.addEventListener('touchmove', function(e){ 				
-			e.preventDefault(); 				
-		});*/
-	 }
-});
+////////////////////////////////////////////////////////////
+// CANVAS LOADER
+////////////////////////////////////////////////////////////
 
-/*!
+ /*!
  * 
- * Resize
- * 
- */
- function resizeMainBrowser(){
-	stageWidth=$(window).width();
-	stageHeight=$(window).height();
-	
-	$('#mainLoader').css('left', checkContentWidth($('#mainLoader')));
-	$('#mainLoader').css('top', checkContentHeight($('#mainLoader')));
-	$('#mainHolder').css('left', checkContentWidth($('#mainHolder')));
-	$('#mainHolder').css('top', checkContentHeight($('#mainHolder')));
-	
-	$('.mobileRotate').css('left', checkContentWidth($('.mobileRotate')));
-	$('.mobileRotate').css('top', checkContentHeight($('.mobileRotate')));
- }
- 
-/*!
- * 
- * Loader
+ * START CANVAS PRELOADER - This is the function that runs to preload canvas asserts
  * 
  */
-function initLoader(){
-	//check is mobile then load dif script or page
-	loadpage='main.html';
-	script_arr=mainScript_arr
+function initPreload(){
+	toggleLoader(true);
 	
-	loadCount=checkCount=script_arr.length;
-        for(var n=0;n<loadCount;n++){
-	        var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = script_arr[n];
-		document.body.appendChild(script);
-	}
-	checkScript()
+	checkMobileEvent();
+	
+	$(window).resize(function(){
+		resizeGameFunc();
+	});
+	resizeGameFunc();
+	
+	loader = new createjs.LoadQueue(false);
+	manifest=[{src:'assets/bg_01.png', id:'bg'}];
+	
+	//music (mp3 and ogg)
+	//manifest.push({src:'assets/music.ogg', id:'musicMain'});
+	
+	createjs.Sound.alternateExtensions = ["mp3"];
+	loader.installPlugin(createjs.Sound);
+	
+	loader.addEventListener("complete", handleComplete);
+	loader.addEventListener("fileload", fileComplete);
+	loader.addEventListener("error",handleFileError);
+	loader.on("progress", handleProgress, this);
+	loader.loadManifest(manifest);
+	
 }
 
-function checkScript(){
-	checkCount=loadCount;
-	for(var n=0;n<loadCount;n++){
-		  $.getScript( script_arr[n] )
-		  .done(function( script, textStatus ) {
-			  checkCount--
-			  onLoadHandler();
-			  console.log( textStatus +' '+checkCount);
-		  })
-		  .fail(function( jqxhr, settings, exception ) {
-			console.log( exception );
-		});
-	}
+/*!
+ * 
+ * CANVAS FILE COMPLETE EVENT - This is the function that runs to update when file loaded complete
+ * 
+ */
+function fileComplete(evt) {
+	var item = evt.item;
+	console.log("Event Callback file loaded ", evt.item.id);
 }
 
-function onLoadHandler(){
-	if(checkCount==0&&loaded==false){
-		loaded=true;
-		$.ajax({
-		    method: 'GET',
-		    url: loadpage,
-		    dataType: 'html',
-		    success: function(page) {
-				$('#mainHolder').empty();
-		    	$('#mainHolder').append(page);
-				initPreload();
-		    },
-		    error: function() {
-		        console.log('Error');
-		    },
-		    progress: function(e) {
-		    	console.log('progress');
-		        if(e.lengthComputable) {
-		            var pct = (e.loaded / e.total) * 100;
-				console.log(pct);
-		        } else {
-		            console.warn('Content Length not reported!');
-		        }
-		    }
-		});
+/*!
+ * 
+ * CANVAS FILE HANDLE EVENT - This is the function that runs to handle file error
+ * 
+ */
+function handleFileError(evt) {
+	console.log("error ", evt);
+}
+
+/*!
+ * 
+ * CANVAS PRELOADER UPDATE - This is the function that runs to update preloder progress
+ * 
+ */
+function handleProgress() {
+	$('#mainLoader').html(Math.round(loader.progress/1*100)+'%');
+}
+
+/*!
+ * 
+ * CANVAS PRELOADER COMPLETE - This is the function that runs when preloader is complete
+ * 
+ */
+function handleComplete() {
+	toggleLoader(false);
+	initMain();
+};
+
+/*!
+ * 
+ * TOGGLE LOADER - This is the function that runs to display/hide loader
+ * 
+ */
+function toggleLoader(con){
+	if(con){
+		$('#mainLoader').show();
+	}else{
+		$('#mainLoader').hide();
 	}
 }

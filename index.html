@@ -6,13 +6,25 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Interactive Website</title>
+        
+        <meta name="Title" content="Interactive Website" />
         <meta name="description" content="">
-        <meta property="og:title" content=""/>
-        <meta property="og:url" content="http://example.com"/>
-        <meta property="og:site_name" content="Your title here"/>
-        <meta property="og:image" content="images/fbshare.jpg"/>
-        <meta name="viewport" content="width=device-width">
+		<meta name="keywords" content="">
+        
+        <!-- for Facebook -->
+        <meta property="og:title" content="Interactive Website"/>
+        <meta property="og:site_name" content="Interactive Website"/>
+        <meta property="og:image" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:description" content="">
+        
+        <!-- for Twitter -->
+        <meta name="twitter:title" content="Interactive Website" />
+        <meta name="twitter:description" content="" />
+        <meta name="twitter:image" content="" />
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<script>
         if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
             var msViewportStyle = document.createElement("style");
@@ -26,37 +38,51 @@
         }
         </script>
 
-        <link rel="shortcut icon" href="icon.png" type="image/png">
+        <link rel="shortcut icon" href="icon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     </head>
     <body>
-        <!--[if lt IE 7]>
-            <p class="notsupport">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-        <!-- Add your site or application content here -->
-        <div id="mainLoader"></div>
-        <div id="mainHolder">
-        	<p>Your browser is currently not supported. We recommend using the latest version of browsers.</p>
-        </div>
+        <!-- PERCENT LOADER START-->
+    <div id="mainLoader">0</div>
+        <!-- PERCENT LOADER END-->
         
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
+        <!-- CONTENT START-->
+        <div id="mainHolder">
+        	<!-- PERCENT LOADER START-->
+            <div id="mainLoader">0</div>
+            <!-- PERCENT LOADER END-->
+        
+        	<!-- BROWSER NOT SUPPORT START-->
+        	<div id="notSupportHolder">
+                <div class="notSupport"><img src="assets/egreeting.png" width="850" height="600"></div>
+            </div>
+            <!-- BROWSER NOT SUPPORT END-->
+            
+            <!-- CANVAS START-->
+            <div id="canvasHolder">
+                <canvas id="gameCanvas" width="800" height="510"></canvas>
+            </div>
+            <!-- CANVAS END-->
+            
+        </div>
+        <!-- CONTENT END-->
+        
+        <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.4.min.js"><\/script>')</script>
+        
+        <script src="js/vendor/detectmobilebrowser.js"></script>
+        <script src="js/vendor/createjs-2015.11.26.min.js"></script>
+        <script src="js/vendor/TweenMax.min.js"></script>
         
         <script src="js/plugins.js"></script>
+        <script src="js/canvas.js"></script>
+        <script src="js/game.js"></script>
+        <script src="js/mobile.js"></script>
+        <script src="js/main.js"></script>
         <script src="js/loader.js"></script>
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
+        <script src="js/init.js"></script>
+        
     </body>
 </html>
-<!-- Monster Template 10 April 2014 -->

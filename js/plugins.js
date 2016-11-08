@@ -32,3 +32,29 @@ function checkContentWidth(target){
 	var newWidth = (stageWidth/2)-(target.width()/2);
 	return newWidth;
 }
+
+function getDeviceVer() {
+	var ua = navigator.userAgent;
+	var uaindex;
+	
+	// determine OS
+	if ( ua.match(/(iPad|iPhone|iPod touch)/) ){
+		userOS = 'iOS';
+		uaindex = ua.indexOf( 'OS ' );
+	}else if ( ua.match(/Android/) ){
+		userOS = 'Android';
+		uaindex = ua.indexOf( 'Android ' );
+	}else{
+		userOS = 'unknown';
+	}
+	
+	// determine version
+	if ( userOS === 'iOS' && uaindex > -1 ){
+		userOSver = ua.substr( uaindex + 3, 3 ).replace( '_', '.' );
+	}else if ( userOS === 'Android'  &&  uaindex > -1 ){
+		userOSver = ua.substr( uaindex + 8, 3 );
+	}else{
+		userOSver = 'unknown';
+	}
+	return Number(userOSver)
+}

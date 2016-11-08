@@ -1,69 +1,63 @@
+////////////////////////////////////////////////////////////
+// MAIN
+////////////////////////////////////////////////////////////
+var stageW=800;
+var stageH=510;
+
 /*!
  * 
- * All your scripts insert here
+ * START BUILD GAME - This is the function that runs build game
  * 
  */
-function initPreload(){
-	loader = new createjs.LoadQueue(false);
-	manifest = [{src:'sound/sound.ogg', id:'button'}
-				];
-	createjs.Sound.alternateExtensions = ["mp3"];
-	loader.installPlugin(createjs.Sound);
-	
-	loader.addEventListener("complete", handleComplete);
-	loader.addEventListener("fileload", fileComplete);
-	loader.addEventListener("error",handleFileError);
-	loader.on("progress", handleProgress, this);
-	loader.loadManifest(manifest);
-}
-
-function handleProgress() {
-	console.log(loader.progress);	
-}
- 
-function handleFileError(evt) {
-	console.log("error ", evt);
-}
-
-function fileComplete(evt) {
-	var item = evt.item;
-	console.log("Event Callback file loaded ", evt);
-}
-
-function handleComplete() {
-	initMain();
-};
-
 function initMain(){
-	//start page script here
-	$('.content').css('visibility', 'visible');
-	initGameCanvas();
+	if(!$.browser.mobile || !isTablet){
+		$('#canvasHolder').show();	
+	}
+	
+	initGameCanvas(stageW,stageH);
 	buildGameCanvas();
+	buildGameButton();
+
+	resizeCanvas();
 }
 
-//canvas 
-var stage
-function initGameCanvas(){
-	stage = new createjs.Stage("gameCanvas");
-}
+var windowW=windowH=0;
+var scalePercent=0;
 
-function buildGameCanvas(){
-	var box = new createjs.Shape();
-	box.graphics.beginFill("#000").drawRect(0, 0, 100, 100);
-	stage.addChild(box);
+/*!
+ * 
+ * GAME RESIZE - This is the function that runs to resize and centralize the game
+ * 
+ */
+function resizeGameFunc(){
+	setTimeout(function() {
+		$('.mobileRotate').css('left', checkContentWidth($('.mobileRotate')));
+		$('.mobileRotate').css('top', checkContentHeight($('.mobileRotate')));
 		
-	createjs.Ticker.setFPS(60);
-	createjs.Ticker.addEventListener("tick", tick);	
-}
-
- function removeGameCanvas(){
-	 stage.autoClear = true; // This must be true to clear the stage.
-	 stage.removeAllChildren();
-	 stage.update();
-	 createjs.Ticker.removeEventListener("tick", tick);
-	 createjs.Ticker.removeEventListener("tick", stage);
- }
-
-function tick(event) {
-	stage.update(event);
+		windowW = $(window).width();
+		windowH = $(window).height();
+		
+		scalePercent = windowW/stageW;
+			
+		if((stageH*scalePercent)>windowH){
+			scalePercent = windowH/stageH;
+		}
+		
+		if(!$.browser.mobile && !isTablet){
+			scalePercent = 1;
+		}
+		
+		var gameCanvas = document.getElementById("gameCanvas");
+		gameCanvas.width=stageW*scalePercent;
+		gameCanvas.height=stageH*scalePercent;
+		
+		if(!$.browser.mobile && !isTablet){
+			$('#canvasHolder').css('top',0);
+		}else{
+			$('#canvasHolder').css('top',(windowH/2)-((stageH*scalePercent)/2));
+		}
+		$('#canvasHolder').css('max-width',stageW*scalePercent);
+		
+		resizeCanvas();
+	}, 100);	
 }
