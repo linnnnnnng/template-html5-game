@@ -78,6 +78,8 @@ html{-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-user-select: none;-webki
 #canvasHolder{ display:none; width:100%; max-width:1024px; height:100%; margin:auto; position:relative;}
 #gameCanvas, #box2dCanvas{ position:absolute;}
 
+input:required, textarea:required {box-shadow:none;}
+input:invalid, textarea:required {box-shadow:none;}
 
 @-webkit-viewport{width:device-width}
 @-moz-viewport{width:device-width}
